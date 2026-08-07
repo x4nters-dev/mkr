@@ -1,0 +1,6 @@
+from sys import argv
+
+from app import App
+
+if __name__ == "__main__":
+    App(argv[1:]).run()
