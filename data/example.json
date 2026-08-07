@@ -7,8 +7,8 @@
       "key": "example1",
       "name": "example1",
       "params": ["stepParam1", "stepParam2"],
-      "script": ["echo 'process step1'"],
-      "rollback": ["echo 'rollback step1'"]
+      "script": ["echo 'process step1 {{scriptParam1}} {{stepParam1}}'"],
+      "rollback": ["echo 'rollback step1 {{scriptParam1}} {{stepParam1}}'"]
     }
   ]
 }
