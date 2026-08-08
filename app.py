@@ -1,3 +1,4 @@
+from enums.run_mode import RunMode
 from features.explorer import Explorer
 from features.runner import Runner
 from os import path
@@ -16,9 +17,9 @@ class App:
         except KeyboardInterrupt:
             pass
 
-    def __on_run(self, file_path: str):
+    def __on_run(self, file_path: str, run_mode: RunMode):
         if not path.isfile(file_path):
             print(f"[!] Script not found: {file_path}")
             return
 
-        Runner(file_path).run()
+        Runner(file_path, run_mode).run()

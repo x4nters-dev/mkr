@@ -1,12 +1,14 @@
 from os import listdir, path
 from typing import Callable
+from enums.run_mode import RunMode
 
 
 class Explorer:
     def __init__(self,
-                 on_run: Callable[[str], None]):
+                 on_run: Callable[[str, RunMode], None]):
         self.path = path.abspath('data')
         self.on_run = on_run
+        self.run_mode: RunMode = RunMode.AUTO
 
     def run(self):
         while True:
@@ -21,6 +23,8 @@ class Explorer:
                     self.__handle_cd('..')
                 case 'cd':
                     self.__handle_cd(' '.join(args))
+                case 'mode':
+                    self.__handle_mode(' '.join(args))
                 case 'run':
                     self.__handle_run(f"{self.path}/{' '.join(args)}")
                 case 'help':
@@ -68,11 +72,27 @@ class Explorer:
         if not path.isfile(current_path):
             return
 
-        self.on_run(current_path)
+        self.on_run(current_path, self.run_mode)
+
+    def __handle_mode(self, arg: str):
+        match arg:
+            case 'auto':
+                self.run_mode = RunMode.AUTO
+            case 'scripts':
+                self.run_mode = RunMode.SCRIPTS_ONLY
+            case 'rollbacks':
+                self.run_mode = RunMode.ROLLBACKS_ONLY
+
+        print(f"[ ] run mode: {self.run_mode.value}")
 
     def __handle_help(self):
         print("[ ] .. - go to parent directory")
         print("[ ] cd <str> - update path")
         print("[ ] ls - list current dir")
         print("[ ] run <str> - run selected script file (*.json)")
+        print("[ ] mode - check set running mode")
+        print("[ ] mode <str> - change working mode [auto, scripts, rollbacks]")
+        print("    - auto - run both depends on conditions")
+        print("    - scripts - run scripts sections only, ignore rollbacks")
+        print("    - rollbacks - run only rollbacks, ignore scripts")
         print("[ ] exit,quit - exit app")
